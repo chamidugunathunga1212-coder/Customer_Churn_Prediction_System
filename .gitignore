@@ -1,1 +1,6 @@
 myenv
+.env
+__pycache__/
+*.pyc
+.DS_Store
+test_mongodb.py
