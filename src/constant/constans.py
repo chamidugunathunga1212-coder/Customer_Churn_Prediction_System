@@ -20,6 +20,8 @@ NUMERICAL_COLUMNS = [
     "SeniorCitizen"
 ]
 
+TRAINING_BUCKET_NAME = "customerchurn123"
+
 """
      data_ingestion modules needs these constants.
 """

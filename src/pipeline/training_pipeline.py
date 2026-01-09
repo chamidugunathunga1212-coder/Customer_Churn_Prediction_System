@@ -19,11 +19,16 @@ from src.entity.config_entity.config_entity import (
                                                     Training_Pipeline_Config
                                                     )
 
+from src.constant.constans import TRAINING_BUCKET_NAME
+from src.cloud.s3_syncer import S3Sync
+
 class TrainingPipeline:
 
     def __init__(self):
         try:
             self.training_pipeline_config = Training_Pipeline_Config()
+            self.s3_sync = S3Sync()
+
         except Exception as e:
             raise CustomerException(e,sys)
         
@@ -120,6 +125,23 @@ class TrainingPipeline:
 
         except Exception as e:
             raise CustomerException(e,sys)
+        
+            ## local artifact is going to s3 bucket    
+    def sync_artifact_dir_to_s3(self):
+        try:
+            aws_bucket_url = f"s3://{TRAINING_BUCKET_NAME}/artifact/{self.training_pipeline_config.timestamp}"
+            self.s3_sync.sync_folder_to_s3(folder = self.training_pipeline_config.artifact_dir,aws_bucket_url=aws_bucket_url)
+        except Exception as e:
+            raise CustomerException(e,sys)
+        
+    ## local final model is going to s3 bucket 
+        
+    def sync_saved_model_dir_to_s3(self):
+        try:
+            aws_bucket_url = f"s3://{TRAINING_BUCKET_NAME}/final_model/{self.training_pipeline_config.timestamp}"
+            self.s3_sync.sync_folder_to_s3(folder = self.training_pipeline_config.model_dir,aws_bucket_url=aws_bucket_url)
+        except Exception as e:
+            raise CustomerException(e,sys)        
 
 
     def run_pipeline(self):
@@ -145,6 +167,9 @@ class TrainingPipeline:
             )
 
             logging.info("========== Training Pipeline Completed ==========")
+
+            self.sync_artifact_dir_to_s3()
+            self.sync_saved_model_dir_to_s3()
 
             return model_evaluation_artifact
 

@@ -18,6 +18,7 @@ class Training_Pipeline_Config:
             self.pipeline_name = constans.PIPELINE_NAME
             self.artifact_name = constans.ARTIFACTS_DIR
             self.artifact_dir =  os.path.join(self.artifact_name,self.timestamp)
+            self.model_dir = os.path.join("final_pikels")
 
         except Exception as e:
             raise CustomerException(e,sys)
