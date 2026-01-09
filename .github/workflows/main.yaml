@@ -1,0 +1,21 @@
+name: ML-FastAPI-CICD
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  integration:
+    name: Continuous Integration
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Lint
+        run: echo "Lint step placeholder"
+      - name: Tests
+        run: echo "Test step placeholder"
